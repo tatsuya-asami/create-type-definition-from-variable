@@ -1,4 +1,38 @@
-export const users = [
+export type User =
+  | {
+      id: number;
+      name: string;
+      username: string;
+      email: string;
+      address: {
+        street: string;
+        suite: string;
+        city: string;
+        zipcode: string;
+        geo: { lat: string; lng: string };
+      };
+      phone: string;
+      website: string;
+      company: { name: string; catchPhrase: string; bs: string };
+    }
+  | {
+      id: number;
+      name: string;
+      username: string;
+      email: string;
+      address: {
+        street: string;
+        suite: string;
+        city: string;
+        zipcode: null;
+        geo: { lat: string; lng: string };
+      };
+      phone: string;
+      website: string;
+      company?: undefined;
+    };
+
+export const users: User[] = [
   {
     id: 1,
     name: "Leanne Graham",

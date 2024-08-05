@@ -1,4 +1,6 @@
-export const posts = [
+export type Post = { userId: number; id: number; title: string; body: string };
+
+export const posts: Post[] = [
   {
     userId: 1,
     id: 1,
