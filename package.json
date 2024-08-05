@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "gen-type": "npx tsx ./scripts/generate-type-and-set.ts"
   },
   "author": "",
   "license": "MIT",
