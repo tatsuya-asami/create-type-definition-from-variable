@@ -3,6 +3,7 @@ import {
   Project,
   SourceFile,
   TypeAliasDeclarationStructure,
+  VariableDeclaration,
 } from "ts-morph";
 
 const project = new Project({
@@ -10,13 +11,14 @@ const project = new Project({
 });
 const sourceFiles = project.addSourceFilesAtPaths("src/**/*.ts");
 
-const createTypeAndSet = (sourceFile: SourceFile) => {
-  const targetVariable = sourceFile.getVariableDeclarations()?.[0];
-  if (!targetVariable) {
-    console.log("No target variables found");
-    return;
-  }
-  const isTypeArray = targetVariable.getType().isArray();
+const getTargetVariable = (sourceFile: SourceFile) => {
+  return sourceFile.getVariableDeclarations()?.[0];
+};
+
+const createType = (
+  targetVariable: VariableDeclaration,
+  isTypeArray: boolean
+) => {
   const elementType = isTypeArray
     ? targetVariable.getType().getArrayElementType()
     : targetVariable.getType();
@@ -32,12 +34,22 @@ const createTypeAndSet = (sourceFile: SourceFile) => {
     type: elementType.getText(),
   };
 
-  sourceFile.insertTypeAlias(0, typeAlias);
-  targetVariable.setType(isTypeArray ? `${typeAlias.name}[]` : typeAlias.name);
+  return typeAlias;
 };
 
 sourceFiles.forEach((sourceFile) => {
-  createTypeAndSet(sourceFile);
+  const targetVariable = getTargetVariable(sourceFile);
+  const isTypeArray = targetVariable.getType().isArray();
+  const typeAlias = createType(targetVariable, isTypeArray);
+
+  if (!typeAlias) {
+    console.error("Type alias not created");
+    return;
+  }
+
+  sourceFile.insertTypeAlias(0, typeAlias);
+  targetVariable.setType(isTypeArray ? `${typeAlias.name}[]` : typeAlias.name);
+
   sourceFile.saveSync();
 });
 
