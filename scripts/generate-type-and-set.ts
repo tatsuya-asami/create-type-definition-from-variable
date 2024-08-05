@@ -1,3 +1,4 @@
+import { exec } from "child_process";
 import {
   OptionalKind,
   Project,
@@ -30,8 +31,9 @@ const createType = (
   const typeAlias: OptionalKind<TypeAliasDeclarationStructure> = {
     name: `${targetVariable.getName()[0].toUpperCase()}${targetVariable
       .getName()
-      .slice(1)}`,
+      .slice(1, -1)}`, // Start with uppercase and remove the last character
     type: elementType.getText(),
+    isExported: true,
   };
 
   return typeAlias;
@@ -54,3 +56,4 @@ sourceFiles.forEach((sourceFile) => {
 });
 
 project.saveSync();
+exec(`npx prettier --write src/**/*.ts`);
