@@ -1,4 +1,4 @@
-const sample = [
+const users = [
   {
     id: 1,
     name: "Leanne Graham",
